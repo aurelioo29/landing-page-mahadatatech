@@ -1,67 +1,80 @@
 import Page from "components/utility/Page";
-
 import { GetStaticProps, GetStaticPaths } from "next";
-import { allKebabTags, allTags } from "@/data/content/projects";
-
 import projects from "@/data/content/projects";
-
 import { kebabCase, kebabArray } from "@/utils/utils";
 import Projects from "components/projects/Projects";
 import Heading from "components/projects/Heading";
-import More from "components/projects/More";
 import Link from "next/link";
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const allTags = [];
-  projects.forEach((project) =>
-    project.tags.forEach((tag) => {
-      allTags.push(tag);
-    })
-  );
-  const uniqueAllTags = [...new Set(allTags)];
-  const allTagsPaths = uniqueAllTags.map((path) => ({
-    params: { tag: `${kebabCase(path)}` },
+  const allTechStacks: string[] = [];
+
+  projects.forEach((project) => {
+    project.techStack.forEach((tech) => {
+      allTechStacks.push(tech);
+    });
+  });
+
+  const uniqueTechStacks = [...new Set(allTechStacks)];
+
+  const allTagsPaths = uniqueTechStacks.map((tech) => ({
+    params: { tag: kebabCase(tech) },
   }));
+
   return {
     paths: allTagsPaths,
     fallback: false,
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({params}: {params: {tag: string}}) => {
+export const getStaticProps: GetStaticProps = async ({
+  params,
+}: {
+  params: { tag: string };
+}) => {
   const tag = params.tag;
+
   const filteredProjects = projects.filter((project) =>
-    [...kebabArray(project.tags)].includes(tag)
+    kebabArray(project.techStack).includes(tag),
   );
+
   return {
-    props: JSON.parse(
-      JSON.stringify({
-        filteredProjects,
-        tag: tag,
-      })
-    ),
+    props: {
+      filteredProjects,
+      tag,
+    },
   };
 };
 
-function PostPage({ filteredProjects, tag }) {
-  const capsTag = allTags[allKebabTags.indexOf(tag)];
+function PostPage({
+  filteredProjects,
+  tag,
+}: {
+  filteredProjects: typeof projects;
+  tag: string;
+}) {
+  const allTechStacks = [
+    ...new Set(projects.flatMap((project) => project.techStack)),
+  ];
+  const allKebabTechStacks = allTechStacks.map((tech) => kebabCase(tech));
+  const capsTag = allTechStacks[allKebabTechStacks.indexOf(tag)];
+
   return (
     <Page
       currentPage="Projects"
       meta={{
         title: `${capsTag} Projects`,
-        desc: `A showcase for all of my ${capsTag} projects.`,
+        desc: `A showcase of projects built with ${capsTag}.`,
       }}
     >
       <Heading tag={capsTag} />
       <Projects overwriteProjects={filteredProjects} />
 
       <Link href="/projects">
-        <div className="mt-8 max-w-sm md:max-w-2xl border border-fun-pink mx-auto text-center w-full whitespace-nowrap px-8 py-3 rounded-full text-fun-pink bg-fun-pink-darkerer hover:bg-fun-pink hover:text-white transition-colors cursor-pointer">
-          View All
-        </div>
+        <a className="mx-auto mt-8 inline-flex w-full max-w-sm items-center justify-center rounded-full border border-fun-pink bg-fun-pink-darkerer px-8 py-3 text-center text-fun-pink transition-colors hover:bg-fun-pink hover:text-white md:max-w-xs">
+          View All Projects
+        </a>
       </Link>
-      {/* <More /> */}
     </Page>
   );
 }
