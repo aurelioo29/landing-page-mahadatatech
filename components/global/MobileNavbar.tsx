@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import Link from "next/link";
-import {routes} from "@/data/global";
+import { routes } from "@/data/global";
 import useDelayedRender from "use-delayed-render";
 
 export default function MobileNavbar() {
@@ -11,7 +11,7 @@ export default function MobileNavbar() {
     {
       enterDelay: 20,
       exitDelay: 300,
-    }
+    },
   );
 
   function toggleMenu() {
@@ -33,16 +33,21 @@ export default function MobileNavbar() {
   return (
     <nav>
       <div
-        className={`w-full justify-between flex items-center ${isMenuRendered && 'bg-bg'} p-5`}
+        className={`w-full justify-between flex items-center ${isMenuRendered && "bg-bg"} p-5`}
         style={{ zIndex: 101 }}
       >
-        <li className="list-none font-bold text-lg">
+        <li className="list-none font-bold text-lg min-w-0">
           <Link href="/">
-            <img
-              className="mr-3"
-              src="/static/logos/logo_full.svg"
-              width="160"
-            />
+            <a className="flex items-center">
+              <img
+                className="mr-2 h-9 w-9 sm:h-10 sm:w-10 object-contain"
+                src="/static/logos/logo.png"
+                alt="MahadataTech Logo"
+              />
+              <span className="text-base sm:text-lg font-black text-white truncate">
+                MahadataTech
+              </span>
+            </a>
           </Link>
         </li>
         <button
