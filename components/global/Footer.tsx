@@ -47,11 +47,10 @@ function Footer() {
                           <span>{linkItem.name}</span>
                         </a>
                       ) : (
-                        <Link
-                          href={linkItem.link}
-                          className="inline-flex items-center text-sm text-fun-gray-light transition hover:text-white md:justify-end"
-                        >
-                          {linkItem.name}
+                        <Link href={linkItem.link}>
+                          <a className="inline-flex items-center text-sm text-fun-gray-light transition hover:text-white md:justify-end">
+                            {linkItem.name}
+                          </a>
                         </Link>
                       )}
                     </li>
