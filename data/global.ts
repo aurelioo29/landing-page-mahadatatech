@@ -15,11 +15,6 @@ type FooterCol = {
 
 type Footer = {
   columns: FooterCol[];
-  support: {
-    buymeacoffee: string;
-    paypal: string;
-    message: string;
-  };
 };
 
 export const routes: Route[] = [
